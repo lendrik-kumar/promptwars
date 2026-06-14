@@ -1,0 +1,118 @@
+{
+  "pincodes": {
+    "110001": {
+      "city": "Delhi", "area": "Connaught Place", "state": "Delhi",
+      "avgDailyCO2Kg": 10.2, "areaMedianIncome": 75000,
+      "topSwaps": ["Metro for office commute", "CNG auto for short trips", "Reduce AC runtime"],
+      "topSwapAdoptionPcts": [42, 38, 31],
+      "householdsInArea": 12400,
+      "vegPct": 52,
+      "twoWheelerPct": 41,
+      "metroAccessPct": 78
+    },
+    "400001": {
+      "city": "Mumbai", "area": "Fort / CST", "state": "Maharashtra",
+      "avgDailyCO2Kg": 8.7, "areaMedianIncome": 85000,
+      "topSwaps": ["Local train over cab", "Order from closer restaurants", "LED bulb upgrade"],
+      "topSwapAdoptionPcts": [65, 44, 38],
+      "householdsInArea": 18200,
+      "vegPct": 48,
+      "twoWheelerPct": 29,
+      "metroAccessPct": 82
+    },
+    "560001": {
+      "city": "Bengaluru", "area": "MG Road / Brigade Road", "state": "Karnataka",
+      "avgDailyCO2Kg": 9.1, "areaMedianIncome": 95000,
+      "topSwaps": ["Work from home 2 days/week", "Metro (Namma Metro) for IT corridor", "EV two-wheeler rental"],
+      "topSwapAdoptionPcts": [55, 48, 22],
+      "householdsInArea": 9800,
+      "vegPct": 44,
+      "twoWheelerPct": 55,
+      "metroAccessPct": 60
+    },
+    "600001": {
+      "city": "Chennai", "area": "Parrys / George Town", "state": "Tamil Nadu",
+      "avgDailyCO2Kg": 8.4, "areaMedianIncome": 65000,
+      "topSwaps": ["MRTS / local train", "Solar water heater", "Seasonal local produce"],
+      "topSwapAdoptionPcts": [38, 28, 51],
+      "householdsInArea": 14500,
+      "vegPct": 58,
+      "twoWheelerPct": 60,
+      "metroAccessPct": 55
+    },
+    "700001": {
+      "city": "Kolkata", "area": "BBD Bagh / Dalhousie", "state": "West Bengal",
+      "avgDailyCO2Kg": 9.4, "areaMedianIncome": 55000,
+      "topSwaps": ["Metro over cabs", "Tram for short distances", "Fan over AC below 30°C"],
+      "topSwapAdoptionPcts": [44, 18, 62],
+      "householdsInArea": 22100,
+      "vegPct": 35,
+      "twoWheelerPct": 32,
+      "metroAccessPct": 72
+    },
+    "500001": {
+      "city": "Hyderabad", "area": "Abids / Koti", "state": "Telangana",
+      "avgDailyCO2Kg": 9.8, "areaMedianIncome": 78000,
+      "topSwaps": ["MMTS train", "Shared cab for IT park commute", "Reduce water heater temp"],
+      "topSwapAdoptionPcts": [35, 40, 28],
+      "householdsInArea": 11200,
+      "vegPct": 40,
+      "twoWheelerPct": 58,
+      "metroAccessPct": 45
+    },
+    "411001": {
+      "city": "Pune", "area": "Camp / Koregaon Park", "state": "Maharashtra",
+      "avgDailyCO2Kg": 8.9, "areaMedianIncome": 72000,
+      "topSwaps": ["Cycle or walk to local market", "Carpool for Hinjewadi commute", "Organic local vegetables"],
+      "topSwapAdoptionPcts": [38, 45, 34],
+      "householdsInArea": 8600,
+      "vegPct": 46,
+      "twoWheelerPct": 62,
+      "metroAccessPct": 20
+    },
+    "380001": {
+      "city": "Ahmedabad", "area": "Ellis Bridge / Navrangpura", "state": "Gujarat",
+      "avgDailyCO2Kg": 9.5, "areaMedianIncome": 68000,
+      "topSwaps": ["BRTS bus over auto", "Solar panel for rooftop", "Khichdi over packaged food"],
+      "topSwapAdoptionPcts": [32, 15, 55],
+      "householdsInArea": 15400,
+      "vegPct": 72,
+      "twoWheelerPct": 65,
+      "metroAccessPct": 30
+    },
+    "302001": {
+      "city": "Jaipur", "area": "Pink City / MI Road", "state": "Rajasthan",
+      "avgDailyCO2Kg": 10.5, "areaMedianIncome": 52000,
+      "topSwaps": ["CNG auto over petrol", "Solar cooker for afternoon meals", "Local millet (bajra) over packaged"],
+      "topSwapAdoptionPcts": [28, 12, 44],
+      "householdsInArea": 13200,
+      "vegPct": 68,
+      "twoWheelerPct": 70,
+      "metroAccessPct": 15
+    },
+    "226001": {
+      "city": "Lucknow", "area": "Hazratganj / Lalbagh", "state": "Uttar Pradesh",
+      "avgDailyCO2Kg": 10.8, "areaMedianIncome": 48000,
+      "topSwaps": ["Electric rickshaw for last-mile", "Reduce beef/mutton to weekly", "LED replacement for fans"],
+      "topSwapAdoptionPcts": [25, 32, 48],
+      "householdsInArea": 16800,
+      "vegPct": 55,
+      "twoWheelerPct": 68,
+      "metroAccessPct": 22
+    }
+  },
+  "cityMappings": {
+    "110": "Delhi", "400": "Mumbai", "560": "Bengaluru", "600": "Chennai",
+    "700": "Kolkata", "500": "Hyderabad", "411": "Pune", "380": "Ahmedabad",
+    "302": "Jaipur", "226": "Lucknow", "440": "Nagpur", "530": "Visakhapatnam",
+    "160": "Chandigarh", "248": "Dehradun", "462": "Bhopal", "492": "Raipur",
+    "700": "Kolkata", "800": "Patna", "360": "Rajkot", "395": "Surat"
+  },
+  "stateFromPrefix": {
+    "110": "Delhi", "400": "Maharashtra", "411": "Maharashtra", "560": "Karnataka",
+    "600": "Tamil Nadu", "700": "West Bengal", "500": "Telangana", "380": "Gujarat",
+    "395": "Gujarat", "302": "Rajasthan", "226": "Uttar Pradesh", "440": "Maharashtra",
+    "530": "Andhra Pradesh", "160": "Chandigarh", "462": "Madhya Pradesh",
+    "492": "Chhattisgarh", "800": "Bihar", "248": "Uttarakhand"
+  }
+}

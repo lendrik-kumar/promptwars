@@ -1,0 +1,40 @@
+{
+  "modes": {
+    "walking":          { "gCO2PerKm": 0,   "label": "Walking",                   "icon": "footprints" },
+    "bicycle":          { "gCO2PerKm": 0,   "label": "Bicycle",                   "icon": "bike"       },
+    "electric_scooter": { "gCO2PerKm": 30,  "label": "Electric Scooter",          "icon": "zap"        },
+    "erickshaw":        { "gCO2PerKm": 50,  "label": "E-Rickshaw",                "icon": "zap"        },
+    "metro":            { "gCO2PerKm": 60,  "label": "Metro / Local Train",        "icon": "train"      },
+    "train":            { "gCO2PerKm": 40,  "label": "Indian Railways",           "icon": "train"      },
+    "city_bus":         { "gCO2PerKm": 80,  "label": "City Bus / BRTS",           "icon": "bus"        },
+    "cng_auto":         { "gCO2PerKm": 130, "label": "CNG Auto-Rickshaw",         "icon": "car"        },
+    "petrol_scooter":   { "gCO2PerKm": 90,  "label": "Petrol Scooter (≤125cc)",   "icon": "car"        },
+    "petrol_bike":      { "gCO2PerKm": 110, "label": "Motorcycle (>150cc)",       "icon": "car"        },
+    "shared_cab":       { "gCO2PerKm": 140, "label": "Shared Cab (Ola Share)",    "icon": "car"        },
+    "petrol_auto":      { "gCO2PerKm": 170, "label": "Petrol Auto-Rickshaw",      "icon": "car"        },
+    "solo_cab":         { "gCO2PerKm": 210, "label": "Solo Cab (Ola / Uber)",     "icon": "car"        },
+    "petrol_car":       { "gCO2PerKm": 185, "label": "Petrol Car (personal)",     "icon": "car"        },
+    "diesel_car":       { "gCO2PerKm": 170, "label": "Diesel Car (personal)",     "icon": "car"        },
+    "flight_domestic":  { "gCO2PerKm": 255, "label": "Domestic Flight",           "icon": "plane"      }
+  },
+  "swapPairs": [
+    { "from": "solo_cab",      "to": "metro",            "label": "Switch Ola/Uber → Metro" },
+    { "from": "solo_cab",      "to": "shared_cab",       "label": "Book Ola Share instead" },
+    { "from": "solo_cab",      "to": "cng_auto",         "label": "Take CNG auto for short trips" },
+    { "from": "petrol_auto",   "to": "cng_auto",         "label": "Choose CNG auto over petrol" },
+    { "from": "petrol_scooter","to": "electric_scooter", "label": "Rent an e-scooter" },
+    { "from": "petrol_car",    "to": "city_bus",         "label": "Park & ride the bus" },
+    { "from": "shared_cab",    "to": "metro",            "label": "Metro is faster & greener" },
+    { "from": "petrol_bike",   "to": "bicycle",          "label": "Cycle for short errands" }
+  ],
+  "ratePerKm": {
+    "solo_cab":  15,
+    "shared_cab": 8,
+    "cng_auto":  12,
+    "petrol_auto": 14,
+    "metro":      2.5,
+    "city_bus":   1.5
+  },
+  "unit": "grams CO2 per km",
+  "source": "IPCC AR6 + India-specific CEA/CPCB localization"
+}
