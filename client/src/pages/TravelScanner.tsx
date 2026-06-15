@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plane, Train, Bus, Map, Zap } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { analyzeTravel, type TravelAnalysis } from '../api/client';
 import { motion } from 'framer-motion';
 
@@ -20,19 +21,17 @@ export default function TravelScanner() {
   const [itinerary, setItinerary] = useState('');
   const [result, setResult]       = useState<TravelAnalysis | null>(null);
   const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!itinerary.trim()) return;
     setLoading(true);
     setResult(null);
-    setError('');
     try {
       const data = await analyzeTravel(itinerary.trim());
       setResult(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze travel');
+      toast.error(err instanceof Error ? err.message : 'Failed to analyze travel');
     } finally {
       setLoading(false);
     }
@@ -41,7 +40,6 @@ export default function TravelScanner() {
   const handlePaste = (text: string) => {
     setItinerary(text);
     setResult(null);
-    setError('');
   };
 
   return (
@@ -73,16 +71,10 @@ export default function TravelScanner() {
                 id="travel-input"
                 className="input"
                 value={itinerary}
-                onChange={(e) => { setItinerary(e.target.value); setResult(null); setError(''); }}
+                onChange={(e) => { setItinerary(e.target.value); setResult(null); }}
                 placeholder="e.g. Flight AI-101 DEL to BOM..."
                 rows={5}
               />
-
-              {error && (
-                <p role="alert" style={{ color: 'var(--color-red)', fontSize: '0.875rem', marginTop: 'var(--space-2)' }}>
-                  ⚠️ {error}
-                </p>
-              )}
 
               <button
                 type="submit"

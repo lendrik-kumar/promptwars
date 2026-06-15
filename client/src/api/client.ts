@@ -16,6 +16,7 @@ const api = axios.create({
   baseURL: '/api',
   timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
 });
 
 // Attach session ID to every request
@@ -240,12 +241,12 @@ export async function analyzeBill(params: {
   billingDays: number;
   amount?: number;
 }): Promise<BillAnalysis> {
-  const res = await api.post<{ data: BillAnalysis }>('/api/bill', params);
+  const res = await api.post<{ data: BillAnalysis }>('/bill', params);
   return res.data.data;
 }
 
 export async function analyzeTravel(itinerary: string): Promise<TravelAnalysis> {
-  const res = await api.post<{ data: TravelAnalysis }>('/api/travel', { itinerary });
+  const res = await api.post<{ data: TravelAnalysis }>('/travel', { itinerary });
   return res.data.data;
 }
 

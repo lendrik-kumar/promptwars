@@ -17,6 +17,10 @@ function notFound(req, res) {
  */
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
+  console.error(`\n[ERROR] ${req.method} ${req.url}`);
+  console.error(`[HEADERS] ${JSON.stringify(req.headers)}`);
+  console.error(`[STACK] ${err.stack}\n`);
+
   const isDev = process.env.NODE_ENV !== 'production';
 
   // Known API-key errors

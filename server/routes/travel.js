@@ -1,5 +1,5 @@
 const express = require('express');
-const { getJsonFromAI } = require('../services/groq');
+const { complete, parseJSON } = require('../services/groq');
 
 const router = express.Router();
 
@@ -32,7 +32,11 @@ You MUST reply with ONLY a JSON object in this exact schema:
   }
 }`;
 
-    const parsedData = await getJsonFromAI(systemPrompt, itinerary);
+    const raw = await complete([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: itinerary }
+    ], { json: true, temperature: 0.1 });
+    const parsedData = parseJSON(raw);
 
     // Apply some sensible fallbacks in case AI misses fields
     const result = {

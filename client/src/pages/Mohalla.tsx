@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, TrendingUp, Users, ChevronRight, Share, Leaf } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import { getMohallaStats, type MohallaStats } from '../api/client';
 
@@ -17,24 +18,22 @@ export default function Mohalla() {
   const [userCO2,  setUserCO2]  = useState('8.4');
   const [data,     setData]     = useState<MohallaStats | null>(null);
   const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState('');
 
   const lookup = async (pin?: string) => {
     const target = (pin ?? pincode).trim();
     if (!/^\d{6}$/.test(target)) {
-      setError('Please enter a valid 6-digit pin code');
+      toast.error('Please enter a valid 6-digit pin code');
       return;
     }
     setLoading(true);
     setData(null);
-    setError('');
     try {
       const co2 = parseFloat(userCO2) || 8.4;
       const res  = await getMohallaStats(target, co2);
       setData(res);
       if (pin) setPincode(pin);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to fetch Mohalla data');
+      toast.error(e instanceof Error ? e.message : 'Failed to fetch Mohalla data');
     } finally {
       setLoading(false);
     }
@@ -70,9 +69,8 @@ export default function Mohalla() {
                 pattern="\d{6}"
                 maxLength={6}
                 value={pincode}
-                onChange={(e) => { setPincode(e.target.value.replace(/\D/g, '')); setError(''); }}
+                onChange={(e) => { setPincode(e.target.value.replace(/\D/g, '')); }}
                 placeholder="e.g. 110001"
-                aria-describedby={error ? 'pin-error' : undefined}
               />
               <label className="input-label" htmlFor="co2-input" style={{ marginTop: 'var(--space-3)' }}>
                 Your estimated daily CO₂ (kg)
@@ -87,11 +85,6 @@ export default function Mohalla() {
                 value={userCO2}
                 onChange={(e) => setUserCO2(e.target.value)}
               />
-              {error && (
-                <p id="pin-error" role="alert" style={{ color: 'var(--color-red)', fontSize: '0.875rem', marginTop: 'var(--space-2)' }}>
-                  ⚠️ {error}
-                </p>
-              )}
               <button
                 id="btn-lookup-mohalla"
                 type="submit"
@@ -204,6 +197,7 @@ function MohallaResult({ data }: { data: MohallaStats }) {
       link.href = dataUrl;
       link.click();
     } catch (err) {
+      toast.error('Failed to export image');
       console.error('Failed to export image', err);
     }
   };

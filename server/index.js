@@ -20,6 +20,7 @@ const copilotRoutes = require('./routes/copilot');
 const walletRoutes  = require('./routes/wallet');
 const billRoutes    = require('./routes/bill');
 const travelRoutes  = require('./routes/travel');
+const authRoutes    = require('./routes/auth');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app  = express();
@@ -33,21 +34,23 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
       connectSrc: ["'self'", "https:"],
-      fontSrc: ["'self'", "data:"],
+      fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
     },
   },
+  xContentTypeOptions: false,
 }));
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN || 'http://localhost:5173',
   'http://localhost:4173', // vite preview
+  'http://localhost:8080',
+  'http://localhost',
 ];
 app.use(cors({
   origin: (origin, cb) => {
@@ -77,6 +80,7 @@ function requireAuth(req, res, next) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
       sessionId = decoded.sessionId;
+      req.userId = decoded.userId || null;
     } catch (err) {
       console.warn('Invalid JWT token, minting new session');
     }
@@ -104,6 +108,10 @@ const globalLimiter = rateLimit({
   max:              200,
   standardHeaders:  true,
   legacyHeaders:    false,
+  handler: (req, res, next, options) => {
+    console.warn(`[RATE LIMIT EXCEEDED] ${req.ip} - ${req.method} ${req.url}`);
+    res.status(options.statusCode).send(options.message);
+  },
   message:          { success: false, error: 'Too many requests, please try again later.' },
 });
 
@@ -128,6 +136,7 @@ app.get('/health', (_req, res) => {
 });
 
 // ── API routes ─────────────────────────────────────────────────────────────────
+app.use('/api/auth',    requireAuth, authRoutes); // requireAuth ensures sessionId exists
 app.use('/api/sms',     requireAuth, aiLimiter, smsRoutes);
 app.use('/api/swap',    requireAuth, swapRoutes);
 app.use('/api/mohalla', requireAuth, aiLimiter, mohallaRoutes);

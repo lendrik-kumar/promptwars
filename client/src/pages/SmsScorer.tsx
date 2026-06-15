@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Zap, ChevronRight, ArrowRight, Leaf } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { parseSMS, type SMSParseResult } from '../api/client';
 
 const SAMPLES = [
@@ -38,12 +39,10 @@ export default function SmsScorer() {
   const [sms,     setSms]     = useState('');
   const [result,  setResult]  = useState<SMSParseResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState('');
 
   const handlePaste = (sample: string) => {
     setSms(sample);
     setResult(null);
-    setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,12 +50,11 @@ export default function SmsScorer() {
     if (!sms.trim()) return;
     setLoading(true);
     setResult(null);
-    setError('');
     try {
       const data = await parseSMS(sms.trim());
       setResult(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to parse SMS');
+      toast.error(err instanceof Error ? err.message : 'Failed to parse SMS');
     } finally {
       setLoading(false);
     }
@@ -86,7 +84,7 @@ export default function SmsScorer() {
                 id="sms-input"
                 className="input"
                 value={sms}
-                onChange={(e) => { setSms(e.target.value); setResult(null); setError(''); }}
+                onChange={(e) => { setSms(e.target.value); setResult(null); }}
                 placeholder="HDFC Bank: UPI txn of Rs.340 to SWIGGY..."
                 rows={4}
                 maxLength={500}
@@ -95,12 +93,6 @@ export default function SmsScorer() {
               <div id="sms-char-count" style={{ fontSize: '0.75rem', color: 'var(--color-text-faint)', textAlign: 'right', marginTop: 4 }}>
                 {sms.length}/500
               </div>
-
-              {error && (
-                <p role="alert" aria-live="polite" style={{ color: 'var(--color-red)', fontSize: '0.875rem', marginTop: 'var(--space-2)' }}>
-                  ⚠️ {error}
-                </p>
-              )}
 
               <button
                 id="btn-parse-sms"

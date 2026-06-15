@@ -16,7 +16,7 @@
   --color-border-hover: #cbd5e1;
 
   --color-accent:       #10b981; /* Emerald 500 */
-  --color-accent-light: #059669; /* Emerald 600 - darker for text contrast on light bg */
+  --color-accent-light: #047857; /* Emerald 700 - WCAG AA compliant for text contrast on light bg */
   --color-accent-dim:   #ecfdf5; /* Emerald 50 */
   --color-accent-glow:  rgba(16, 185, 129, 0.15);
 
@@ -28,7 +28,7 @@
 
   --color-text:         #0f172a; /* Slate 900 */
   --color-text-muted:   #475569; /* Slate 600 */
-  --color-text-faint:   #94a3b8; /* Slate 400 */
+  --color-text-faint:   #64748b; /* Slate 500 - WCAG AA compliant on white */
 
   /* Typography */
   --font-body:    'Inter', system-ui, sans-serif;
@@ -506,3 +506,5 @@ textarea.input { resize: vertical; min-height: 100px; }
     transition-duration: 0.01ms !important;
   }
 }
+
+.cache-buster-12345 { color: #123456; }

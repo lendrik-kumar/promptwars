@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Image as ImageIcon, ArrowRight, AlertTriangle, CheckCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { analyzeReceipt, type ReceiptResult, type ReceiptItem } from '../api/client';
 
 const FLAG_CONFIG = {
@@ -14,14 +15,12 @@ export default function ReceiptScanner() {
   const [preview,  setPreview]  = useState<string | null>(null);
   const [result,   setResult]   = useState<ReceiptResult | null>(null);
   const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState('');
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File) => {
     setFile(f);
     setResult(null);
-    setError('');
     const url = URL.createObjectURL(f);
     setPreview(url);
   };
@@ -31,7 +30,7 @@ export default function ReceiptScanner() {
     setDragOver(false);
     const f = e.dataTransfer.files[0];
     if (f && f.type.startsWith('image/')) handleFile(f);
-    else setError('Please drop an image file (JPEG, PNG, or WebP)');
+    else toast.error('Please drop an image file (JPEG, PNG, or WebP)');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,12 +42,11 @@ export default function ReceiptScanner() {
     if (!file) return;
     setLoading(true);
     setResult(null);
-    setError('');
     try {
       const data = await analyzeReceipt(file);
       setResult(data);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to analyze receipt');
+      toast.error(e instanceof Error ? e.message : 'Failed to analyze receipt');
     } finally {
       setLoading(false);
     }
@@ -104,17 +102,10 @@ export default function ReceiptScanner() {
               style={{ display: 'none' }}
               aria-label="Select receipt image"
             />
-
             {file && (
               <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
                 <ImageIcon size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} aria-hidden="true" />
                 {file.name} · {(file.size / 1024).toFixed(0)} KB
-              </p>
-            )}
-
-            {error && (
-              <p role="alert" aria-live="polite" style={{ color: 'var(--color-red)', fontSize: '0.875rem' }}>
-                ⚠️ {error}
               </p>
             )}
 

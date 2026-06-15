@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BarChart2, Zap } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { analyzeBill, type BillAnalysis } from '../api/client';
 
 const INDIAN_STATES = [
@@ -23,15 +24,13 @@ export default function BillAnalyzer() {
   const [amount,      setAmount]      = useState('');
   const [result,      setResult]      = useState<BillAnalysis | null>(null);
   const [loading,     setLoading]     = useState(false);
-  const [error,       setError]       = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const u = parseFloat(units);
-    if (!u || u <= 0) { setError('Please enter valid units'); return; }
+    if (!u || u <= 0) { toast.error('Please enter valid units'); return; }
     setLoading(true);
     setResult(null);
-    setError('');
     try {
       const data = await analyzeBill({
         units: u,
@@ -41,7 +40,7 @@ export default function BillAnalyzer() {
       });
       setResult(data);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Analysis failed');
+      toast.error(e instanceof Error ? e.message : 'Analysis failed');
     } finally {
       setLoading(false);
     }
@@ -75,10 +74,9 @@ export default function BillAnalyzer() {
                   max="10000"
                   step="0.1"
                   value={units}
-                  onChange={(e) => { setUnits(e.target.value); setError(''); }}
+                  onChange={(e) => { setUnits(e.target.value); }}
                   placeholder="e.g. 186"
                   required
-                  aria-describedby={error ? 'bill-error' : undefined}
                 />
               </div>
 
@@ -122,12 +120,6 @@ export default function BillAnalyzer() {
                   placeholder="e.g. 1,480"
                 />
               </div>
-
-              {error && (
-                <p id="bill-error" role="alert" style={{ color: 'var(--color-red)', fontSize: '0.875rem' }}>
-                  ⚠️ {error}
-                </p>
-              )}
 
               <button
                 id="btn-analyze-bill"

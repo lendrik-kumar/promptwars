@@ -3,9 +3,11 @@
 const express = require('express');
 const { body } = require('express-validator');
 const { validate } = require('../middleware/validateInput');
+const { PrismaClient } = require('@prisma/client');
 const groq = require('../services/groq');
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
 const COPILOT_SYSTEM = `You are CarbonIQ Copilot — an AI carbon advisor specialised for India.
 Your expertise:
@@ -52,6 +54,27 @@ router.post(
       // Build system prompt with optional location context
       let systemContent = COPILOT_SYSTEM;
       if (context.state) systemContent += `\n\nUser location: ${context.city || ''}, ${context.state}. Use this state's grid factor for electricity questions.`;
+
+      // Inject User Context from Database
+      if (req.sessionId) {
+        const userSession = await prisma.userSession.findUnique({
+          where: { sessionId: req.sessionId },
+          include: { swapHistory: { orderBy: { completedAt: 'desc' }, take: 5 } }
+        });
+        
+        if (userSession) {
+          systemContent += `\n\n--- USER CONTEXT ---
+The user currently has a profile with the following stats:
+- Total CO2 Saved: ${userSession.totalCO2SavedKg} kg
+- Total Money Saved: ₹${userSession.totalMoneySavedINR}
+- Swaps Completed: ${userSession.swapsCompleted}
+
+Recent sustainable swaps they have made:
+${userSession.swapHistory.length > 0 ? userSession.swapHistory.map(s => `- ${s.label || 'Swap'} (saved ${s.carbonSavedKg}kg CO2, ₹${s.moneySavedINR})`).join('\n') : 'No swaps logged yet.'}
+
+Use this context to personalize your advice. Congratulate them on their savings if relevant, and suggest next steps based on their history.`;
+        }
+      }
 
       // Limit conversation history to last 10 turns for token efficiency
       const history = messages.slice(-10);

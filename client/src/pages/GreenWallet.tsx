@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Wallet, TrendingDown, DollarSign, CheckCircle, Clock, Share, Leaf } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { getWallet, type WalletState } from '../api/client';
 
 export default function GreenWallet() {
@@ -16,7 +17,9 @@ export default function GreenWallet() {
       const data = await getWallet();
       setWallet(data);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to load wallet');
+      const msg = e instanceof Error ? e.message : 'Failed to load wallet';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -34,9 +37,9 @@ export default function GreenWallet() {
 
   if (error) return (
     <div className="page">
-      <div className="container">
-        <p role="alert" style={{ color: 'var(--color-red)' }}>⚠️ {error}</p>
-        <button className="btn btn--outline btn--sm" onClick={load} style={{ marginTop: 12 }}>Retry</button>
+      <div className="container" style={{ textAlign: 'center', padding: 'var(--space-12) 0' }}>
+        <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--space-4)' }}>Unable to load your Green Wallet.</p>
+        <button className="btn btn--outline btn--sm" onClick={load}>Try Again</button>
       </div>
     </div>
   );
@@ -52,7 +55,9 @@ export default function GreenWallet() {
       link.download = 'carboniq-impact.png';
       link.href = dataUrl;
       link.click();
+      toast.success('Impact Card saved!');
     } catch (err) {
+      toast.error('Failed to export image');
       console.error('Failed to export image', err);
     }
   };

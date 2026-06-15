@@ -4,14 +4,24 @@ services:
   carboniq:
     build: .
     container_name: carboniq_prod
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
       - GROQ_API_KEY=${GROQ_API_KEY}
     volumes:
       - carboniq_data:/app/data
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    container_name: carboniq_nginx
+    ports:
+      - "80:80"
+      - "8080:80"
+    depends_on:
+      - carboniq
     restart: unless-stopped
 
 volumes:

@@ -12,9 +12,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions UserSession[]
+}
+
 model UserSession {
   id                 String   @id @default(uuid())
   sessionId          String   @unique
+  userId             String?
   totalCO2SavedKg    Float    @default(0)
   totalMoneySavedINR Float    @default(0)
   swapsCompleted     Int      @default(0)
@@ -22,6 +34,8 @@ model UserSession {
   updatedAt          DateTime @updatedAt
 
   swapHistory SwapAction[]
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model SwapAction {

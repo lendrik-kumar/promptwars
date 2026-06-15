@@ -1,5 +1,6 @@
 # Base node image
 FROM node:20-alpine AS base
+RUN apk add --no-cache openssl
 
 # --- Stage 1: Build Client ---
 FROM base AS client-build
