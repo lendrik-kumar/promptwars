@@ -1,6 +1,11 @@
 'use strict';
 
 /**
+ * @module CarbonEngine
+ * @description Core calculation engine for analyzing and scoring various carbon-emitting activities.
+ */
+
+/**
  * Carbon Calculation Engine
  * Pure functions — no I/O, no side effects.
  * All inputs are validated before use; invalid inputs return 0.

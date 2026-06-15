@@ -2,14 +2,36 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
+// Strict rate limiter for authentication endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: { success: false, error: 'Too many login attempts, please try again after 15 minutes' },
+});
+
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
+/**
+ * POST /api/auth/register
+ * 
+ * Registers a new user with an email and password.
+ * Will securely hash the password using bcrypt.
+ * 
+ * @name Register Route
+ * @route {POST} /api/auth/register
+ * @bodyparam {string} email - The user's email address
+ * @bodyparam {string} password - The user's raw password
+ * @bodyparam {string} [name] - The user's full name
+ */
 // POST /api/auth/register
-router.post('/register', async (req, res, next) => {
+router.post('/register', authLimiter, async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password) {
@@ -48,7 +70,7 @@ router.post('/register', async (req, res, next) => {
     res.cookie('session_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
@@ -61,8 +83,19 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+/**
+ * POST /api/auth/login
+ * 
+ * Authenticates a user and establishes a secure JWT session cookie.
+ * Links any existing anonymous session data to the authenticated user.
+ * 
+ * @name Login Route
+ * @route {POST} /api/auth/login
+ * @bodyparam {string} email - The user's email address
+ * @bodyparam {string} password - The user's raw password
+ */
 // POST /api/auth/login
-router.post('/login', async (req, res, next) => {
+router.post('/login', authLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -93,7 +126,7 @@ router.post('/login', async (req, res, next) => {
     res.cookie('session_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 

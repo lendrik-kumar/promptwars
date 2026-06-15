@@ -48,8 +48,8 @@ export default function Copilot() {
         <header className="animate-fade-up" style={{ marginBottom: 'var(--space-5)', flexShrink: 0 }}>
           <p className="section-heading">AI Assistant</p>
           <h1>Carbon Copilot 🤖</h1>
-          <p style={{ color: 'var(--color-text-muted)', marginTop: 'var(--space-2)', maxWidth: '52ch' }}>
-            Ask anything about carbon, money, and sustainability. India-specific numbers. Rupee trade-offs.
+          <p style={{ color: 'var(--color-text-muted)', marginTop: 'var(--space-2)', maxWidth: '60ch' }}>
+            Your smart, dynamic assistant. Ask anything about your carbon footprint, lifestyle changes, or daily habits for logical decision-making and practical real-world usability.
           </p>
         </header>
 

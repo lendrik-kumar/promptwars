@@ -55,9 +55,10 @@ const Register: React.FC = () => {
                 type="text"
                 required
                 className="input"
-                placeholder="Rahul"
+                placeholder="Jane Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
               />
             </div>
             <div>
@@ -69,6 +70,7 @@ const Register: React.FC = () => {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
               />
             </div>
             <div>
@@ -81,6 +83,7 @@ const Register: React.FC = () => {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
               />
             </div>
             <button type="submit" className="btn btn--primary" style={{ width: '100%', marginTop: 'var(--space-2)' }} disabled={isLoading}>
