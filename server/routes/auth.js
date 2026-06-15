@@ -3,6 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
+const { z } = require('zod');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -31,12 +32,15 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
  * @bodyparam {string} [name] - The user's full name
  */
 // POST /api/auth/register
+const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+  name: z.string().optional()
+});
+
 router.post('/register', authLimiter, async (req, res, next) => {
   try {
-    const { email, password, name } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, error: 'Email and password required' });
-    }
+    const { email, password, name } = registerSchema.parse(req.body);
 
     // Check if user already exists
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -64,14 +68,14 @@ router.post('/register', authLimiter, async (req, res, next) => {
       });
     }
 
-    // Create new JWT with userId
-    const token = jwt.sign({ sessionId: req.sessionId, userId: user.id }, JWT_SECRET, { expiresIn: '30d' });
+    // Create new JWT with userId (15 minute access token)
+    const token = jwt.sign({ sessionId: req.sessionId, userId: user.id }, JWT_SECRET, { expiresIn: '15m' });
 
     res.cookie('session_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.json({
@@ -95,12 +99,14 @@ router.post('/register', authLimiter, async (req, res, next) => {
  * @bodyparam {string} password - The user's raw password
  */
 // POST /api/auth/login
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string()
+});
+
 router.post('/login', authLimiter, async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, error: 'Email and password required' });
-    }
+    const { email, password } = loginSchema.parse(req.body);
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
@@ -120,14 +126,14 @@ router.post('/login', authLimiter, async (req, res, next) => {
       });
     }
 
-    // Create new JWT with userId
-    const token = jwt.sign({ sessionId: req.sessionId, userId: user.id }, JWT_SECRET, { expiresIn: '30d' });
+    // Create new JWT with userId (15 minute access token)
+    const token = jwt.sign({ sessionId: req.sessionId, userId: user.id }, JWT_SECRET, { expiresIn: '15m' });
 
     res.cookie('session_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.json({

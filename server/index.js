@@ -30,6 +30,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-fallback-key-replace-
 // ── Security headers ─────────────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
+  referrerPolicy: { policy: 'strict-origin' },
+  frameguard: { action: 'deny' },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
@@ -42,7 +44,7 @@ app.use(helmet({
       mediaSrc: ["'self'"],
     },
   },
-  xContentTypeOptions: false,
+  xContentTypeOptions: true, // sets 'nosniff'
 }));
 
 // ── CORS ─────────────────────────────────────────────────────────────────────

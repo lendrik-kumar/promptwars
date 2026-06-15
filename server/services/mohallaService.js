@@ -37,6 +37,31 @@ function getCityFromPin(pincode) {
 }
 
 /**
+ * Generate Laplace noise for Differential Privacy.
+ * @param {number} scale The scale (b) of the Laplace distribution
+ * @returns {number} Noise to add
+ */
+function getLaplaceNoise(scale) {
+  const u = Math.random() - 0.5;
+  return -scale * Math.sign(u) * Math.log(1 - 2 * Math.abs(u));
+}
+
+/**
+ * Apply Differential Privacy to aggregated statistics.
+ * Epsilon (ε) controls privacy budget. Lower ε = higher privacy (ε ≤ 0.1 required).
+ * 
+ * @param {number} value The raw aggregated value
+ * @param {number} sensitivity The maximum change one user can cause (e.g., max CO2 score)
+ * @param {number} epsilon The privacy budget (≤ 0.1)
+ * @returns {number} The differentially private value
+ */
+function applyDP(value, sensitivity, epsilon = 0.1) {
+  const scale = sensitivity / epsilon;
+  const noise = getLaplaceNoise(scale);
+  return Math.max(0, value + noise); // Ensure score doesn't go negative
+}
+
+/**
  * Calculate percentile of userCO2 within the area distribution.
  * Lower CO₂ = higher percentile (you're better than X% of area).
  * Assumes roughly normal distribution around areaMean.
@@ -133,6 +158,9 @@ async function getMohallaStats(pincode, userCO2 = 8.4) {
     topSwap:     data.topSwaps[i % data.topSwaps.length],
   }));
 
+  // Apply Differential Privacy (ε ≤ 0.1)
+  const dpAreaAverageKg = applyDP(data.avgDailyCO2Kg, 5, 0.1);
+
   return {
     pincode,
     city,
@@ -141,7 +169,7 @@ async function getMohallaStats(pincode, userCO2 = 8.4) {
     gridFactor:          gridData.factor,
     renewablePct:        gridData.renewable_pct,
     userFootprintKg:     userCO2,
-    areaAverageKg:       data.avgDailyCO2Kg,
+    areaAverageKg:       parseFloat(dpAreaAverageKg.toFixed(1)),
     percentile,
     message:             percentile >= 50
       ? `You're in the top ${100 - percentile}% of households in this area 🌿`

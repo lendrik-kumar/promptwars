@@ -59,6 +59,7 @@ const Register: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoComplete="name"
+                aria-required="true"
               />
             </div>
             <div>
@@ -71,6 +72,7 @@ const Register: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="username"
+                aria-required="true"
               />
             </div>
             <div>
@@ -84,6 +86,7 @@ const Register: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
+                aria-required="true"
               />
             </div>
             <button type="submit" className="btn btn--primary" style={{ width: '100%', marginTop: 'var(--space-2)' }} disabled={isLoading}>
