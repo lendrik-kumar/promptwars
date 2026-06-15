@@ -36,7 +36,7 @@ router.post('/register', async (req, res, next) => {
 
     // Link current anonymous session if it exists
     if (req.sessionId) {
-      await prisma.userSession.update({
+      await prisma.userSession.updateMany({
         where: { sessionId: req.sessionId },
         data: { userId: user.id },
       });
@@ -81,7 +81,7 @@ router.post('/login', async (req, res, next) => {
 
     // Link current session to user
     if (req.sessionId) {
-      await prisma.userSession.update({
+      await prisma.userSession.updateMany({
         where: { sessionId: req.sessionId },
         data: { userId: user.id },
       });

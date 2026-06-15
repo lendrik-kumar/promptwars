@@ -33,7 +33,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://static.cloudflareinsights.com", "https://challenges.cloudflare.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
       connectSrc: ["'self'", "https:"],
@@ -51,6 +51,8 @@ const allowedOrigins = [
   'http://localhost:4173', // vite preview
   'http://localhost:8080',
   'http://localhost',
+  'https://carbon.blinus.in',
+  'http://carbon.blinus.in'
 ];
 app.use(cors({
   origin: (origin, cb) => {

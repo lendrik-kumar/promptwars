@@ -18,8 +18,7 @@ services:
     build: ./nginx
     container_name: carboniq_nginx
     ports:
-      - "80:80"
-      - "8080:80"
+      - "443:443"
     depends_on:
       - carboniq
     restart: unless-stopped
